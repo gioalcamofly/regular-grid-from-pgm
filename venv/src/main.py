@@ -1,39 +1,25 @@
 import cv2 as cv
-import numpy as nd
 import sys
+from astar import astar
+from image_utils import treat_img, draw_rectangle
 
 img = cv.imread('/home/giovanni/Escritorio/housemap.pgm')
-
 
 if img is None:
     sys.exit('Can\'t read image')
 
-gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-ret, thresh_img = cv.threshold(gray_img, 240, 255, 0)
+treated_img, regular_grid = treat_img(img)
 
-contours = cv.findContours(thresh_img, 1, 2)
+start = (1, 1)
+end = (10, 10)
 
-cnt = contours[0]
+path = astar(regular_grid, start, end)
 
-x,y,w,h = cv.boundingRect(cnt)
-print x
-print y
-print w
-print h
+for node in path:
+    treated_img = draw_rectangle(treated_img, node[0], node[1])
 
-cropped_img = thresh_img[y:(y+h), x:(x+w)]
+cv.imshow('path', treated_img)
 
-cv.imshow('Rectangle', cropped_img)
-
-
-grid_size = 5
-
-height, width = cropped_img.shape
-
-for x in range(0, width - 1, grid_size):
-    cv.line(cropped_img, (x, 0), (x, height), 0, 1, 1)
-
-cv.imshow('Gridded', cropped_img)
 cv.waitKey(0)
 
