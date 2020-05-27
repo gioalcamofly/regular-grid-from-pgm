@@ -3,7 +3,7 @@ import sys
 from astar import astar
 from image_utils import treat_img, draw_rectangle
 
-img = cv.imread('/home/giovanni/Escritorio/housemap.pgm')
+img = cv.imread('./resources/housemap.pgm')
 
 if img is None:
     sys.exit('Can\'t read image')
